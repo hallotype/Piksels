@@ -25,7 +25,7 @@ Extra character sets must have a suffix, eg: 'A.heavy'.
 
 The pixels that end up in the variable font are named 'pixel.#' where # is a value, starting at 0 and the end is up to you. 
 example:
-![test](pixelLineup.pdf)
+![pixellineup](pixelLineup.png)
 
 Keep in mind that all these pixels need to interpolate! By putting two values right next to each other (400,401) it will look like a pixel switch.
 
@@ -154,7 +154,7 @@ First set the Version at line 5 to:
 \<Version value="0x0001000**1**"/>
 
 Add the bottom of the file, between 
-\</LookupList> and   \</GSUB> we need the add the FeatureVariations.
+`</LookupList>` and   `</GSUB>` we need the add the FeatureVariations.
 Open FeatureVariations.ttx and copypaste the content here.
 
 Save and close
