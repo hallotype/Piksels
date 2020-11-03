@@ -39,8 +39,6 @@ doExpanded = False
 
 doRotate = False
 
-addCharSetAxis = True
-
 # parameter values
 
 slantFactor = 1 # How much the pixel in the next row will shift in pixel-widths
@@ -78,16 +76,6 @@ if not doSlant:
 
 knownLocs = []
 
-
-#defs
-
-def getMaxCharSets():
-    l = list(f.keys())
-    c=1
-    for i in l:
-        if "A." in i:
-            c+=1
-    return(c)
 
 def addSource(file, locs, doc):
 	source = SourceDescriptor()
@@ -135,22 +123,6 @@ a.labelNames[u'en'] = u"Pixel"
 # a.map = [(1.0, 10.0), (400.0, 66.0), (1000.0, 990.0)]
 # add it to ds
 doc.addAxis(a)
-
-
-
-if addCharSetAxis:
-    csa = AxisDescriptor()
-    csa.minimum = 0
-    csa.maximum = getMaxCharSets()-1
-    csa.default = 0
-    csa.name = "charset"
-    csa.tag = "CHAR"
-    # a.labelNames[u'fa-IR'] = u"قطر"
-    csa.labelNames[u'en'] = u"Character Set"
-    # a.map = [(1.0, 10.0), (400.0, 66.0), (1000.0, 990.0)]
-    # add it to ds
-    doc.addAxis(csa)    
-
 
 
 # widths:
@@ -433,68 +405,3 @@ for gn, name in names.items():
 
 doc.write("Piksels.designspace")    
 
-
-
-
-
-# get GSUB FeatureVariations
-
-# set the values here
-
-axisIndex = 1
-nrOfCharSets = getMaxCharSets()-1
-RVRNIndex = 0
-LookupIndex = 0
-
-step = 1/nrOfCharSets
-
-
-
-def getFeatureVariations(LookupIndex):
-	feavar = """
-    <FeatureVariations>
-      <Version value="0x00010000"/>
-      """
-
-	FeatureRecord = FR = """      
-      <FeatureVariationRecord index="{FVRI}">
-        <ConditionSet>
-          <ConditionTable index="0" Format="1">
-            <AxisIndex value="{axisIndex}"/>
-            <FilterRangeMinValue value="{_from}"/>
-            <FilterRangeMaxValue value="{_till}"/>
-          </ConditionTable>
-        </ConditionSet>
-        <FeatureTableSubstitution>
-          <Version value="0x00010000"/>
-          <SubstitutionRecord index="0">
-            <FeatureIndex value="{RVRNIndex}"/>
-            <Feature>
-              <LookupListIndex index="0" value="{LookupIndex}"/>
-            </Feature>
-          </SubstitutionRecord>
-        </FeatureTableSubstitution>
-      </FeatureVariationRecord>\n"""
-
-	# assume 0-1 axis
-	for FVRI in range(1,nrOfCharSets):
-
-		_from = 1/((nrOfCharSets-1)*2)*(FVRI+(FVRI-1))
-		_till = 1/((nrOfCharSets-1)*2)*(FVRI+(FVRI+1))
-
-		if FVRI == nrOfCharSets-1: _till=1
-
-		feavar += (FR.format(
-						FVRI=FVRI,
-						axisIndex=axisIndex,
-						_from=_from,
-						_till=_till,
-						RVRNIndex=RVRNIndex,
-						LookupIndex=LookupIndex))
-		LookupIndex += 1
-	feavar+="\n    </FeatureVariations>"
-	return feavar
-		
-FeaVar = getFeatureVariations(LookupIndex)
-with open("FeatureVariations.ttx", "w+") as file:
-	file.write(FeaVar)
