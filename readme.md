@@ -94,7 +94,7 @@ Keep in mind that all these pixels need to interpolate. You can 'trick' the syst
 
 Place an anchor in the glyph. This will be the rotating point for the rotate axis. 
 
-See the `Example.ufo` for an -well- example.
+See the `Example.ufoz` for an -well- example.
 
 ## Create a variable font
 super easy: 
